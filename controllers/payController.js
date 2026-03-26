@@ -1,22 +1,22 @@
 import Stripe from 'stripe';
 import { getDBConnection } from '../db/db.js';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-export const createPaymentIntent = async (req, res) => {
-  const { amount, currency = 'aud', metadata = {} } = req.body;
+// export const createPaymentIntent = async (req, res) => {
+//   const { amount, currency = 'aud', metadata = {} } = req.body;
 
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // Stripe uses cents
-      currency,
-      metadata, // e.g. { orderId: '123', userId: '456' }
-      automatic_payment_methods: { enabled: true },
-    });
+//   try {
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount: Math.round(amount * 100), // Stripe uses cents
+//       currency,
+//       metadata, // e.g. { orderId: '123', userId: '456' }
+//       automatic_payment_methods: { enabled: true },
+//     });
 
-    res.json({ clientSecret: paymentIntent.client_secret });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+//     res.json({ clientSecret: paymentIntent.client_secret });
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 
 export const createCheckoutSession = async (req, res) => {
   const userId = req.session.userId;

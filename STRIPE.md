@@ -1,5 +1,34 @@
 # Stripe Integration — Step by Step
 
+## Payment Flow
+
+```
+User clicks Checkout
+    ↓
+POST /api/checkout/create-checkout-session
+    ↓
+Backend reads cart from DB using session userId
+Creates a Stripe checkout session with cart items
+    ↓
+Stripe returns a { url }
+Frontend redirects user to that url → Stripe's hosted payment page
+    ↓
+User pays on Stripe's page
+    ↓
+Stripe does TWO things simultaneously and independently:
+
+1. Redirects user to /success.html          2. Fires webhook to /api/checkout/webhook
+   (happens immediately)                       (happens in the background)
+         ↓                                               ↓
+   User sees thank you page                  webhookHandler runs
+   (no connection to webhook result)         updates DB, fulfils order
+```
+
+> **Important:** `success.html` is shown immediately after payment regardless of the webhook.
+> Never rely on the redirect to confirm an order — always use the webhook as the source of truth.
+
+---
+
 ### 1. Install Stripe and dotenv
 
 ```bash
