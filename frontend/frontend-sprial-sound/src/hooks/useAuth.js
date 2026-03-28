@@ -35,8 +35,7 @@ export function useAuth(initialValue = null) {
         body: JSON.stringify({ username, password }),
       });
       if (res.ok) {
-        const data = await res.json();
-        setUser(data.name);
+        await checkAuth();
         navigate('/');
       }
       return res;
@@ -54,6 +53,8 @@ export function useAuth(initialValue = null) {
     const json = await res.json();
     return json.message;
   }
-  useEffect(checkAuth, []); //use immediately when component mounts
+  useEffect(() => {
+    checkAuth();
+  }, []);
   return [user, checkAuth, login, logout];
 }

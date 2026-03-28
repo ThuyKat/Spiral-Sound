@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import useCartCount from '../../../hooks/useCartCount';
+import { CartContext } from '../../../context/cartContext';
+import { useContext } from 'react';
 export default function ProductList() {
   const [products, setProducts] = useState([]);
   const [queryParams, setQueryParams] = useSearchParams();
-  const { refresh } = useCartCount();
+  const { refresh } = useContext(CartContext);
   const navigate = useNavigate();
   useEffect(() => {
     const getProducts = async () => {

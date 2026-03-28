@@ -1,9 +1,11 @@
 import { useState, useRef, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/authContext';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 export default function Login() {
-  const [login] = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const ref = useRef(0);
+  const navigate = useNavigate();
   //   const [formData, setFormData] = useState({
   //     username: '',
   //     password: '',
@@ -20,8 +22,6 @@ export default function Login() {
         formData.get('username'),
         formData.get('password')
       );
-      const data = await res.json();
-
       if (res.ok) {
         navigate('/');
       } else {
@@ -70,9 +70,9 @@ export default function Login() {
           </button>
           <p>
             No account?{' '}
-            <a href="/signup.html" className="sign-link">
+            <Link to="/signup" className="sign-link">
               Sign up here
-            </a>
+            </Link>
             .
           </p>
           <p id="error-message" className="error">
