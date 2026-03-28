@@ -1,13 +1,14 @@
-import logo from '../../assets/spiral_logo.png';
+import logo from '../../../assets/spiral_logo.png';
+import { Link } from 'react-router-dom';
 export default function Header() {
   return (
     <header>
-      <a href="/">
+      <Link to="/">
         <img src={logo} alt="Spiral Sounds Logo" />
-      </a>
-      <div class="header-text">
+      </Link>
+      <div className="header-text">
         <h1>Spiral Sounds</h1>
-        <p class="subhead">The best in vinyl</p>
+        <p className="subhead">The best in vinyl</p>
       </div>
     </header>
   );

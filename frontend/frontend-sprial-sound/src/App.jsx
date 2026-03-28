@@ -1,5 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
+import Layout from './components/Layout.jsx';
+import Cart from './pages/Cart/index.jsx';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import PageNotFound from './pages/PageNotFound';
 function App() {
   return (
     <Routes>

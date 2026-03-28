@@ -28,6 +28,7 @@ app.use(
 );
 
 app.use(express.static('../frontend'));
+app.use('/images', express.static('./static/images'));
 
 app.use('/api/products', productsRouter);
 
