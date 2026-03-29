@@ -1,0 +1,47 @@
+.sign-forms {
+  display: flex;
+  flex-direction: column;
+  max-width: 50%;
+  margin: 0 auto;
+}
+
+.form-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-inner input {
+  padding: 0.7em;
+}
+
+.form-inner label {
+  margin-bottom: -5px;
+}
+
+.sign-link {
+  color: var(--color-accent);
+  border: none;
+  cursor: pointer;
+}
+
+.form-btn {
+  margin-top: 0.5em;
+  background-color: var(--color-accent);
+  color: white;
+  padding: 0.8em 1.5em;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 1.1rem;
+}
+
+.form-btn:hover {
+  background-color: dodgerblue;
+}
+
+.form-btn:active {
+  background-color: yellow;
+  color: black;
+}

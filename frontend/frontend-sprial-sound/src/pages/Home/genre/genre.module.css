@@ -1,0 +1,7 @@
+.genre-select-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  gap: var(--space-md);
+}

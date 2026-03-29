@@ -1,0 +1,17 @@
+.cart-banner-link {
+  display: flex;
+  align-items: center;
+}
+
+.cart-banner-link a {
+  color: var(--color-accent);
+}
+
+.cart-banner-link a:hover {
+  text-decoration: none;
+}
+
+.cart-banner-link img {
+  max-width: 1em;
+  margin-right: 0.3em;
+}
