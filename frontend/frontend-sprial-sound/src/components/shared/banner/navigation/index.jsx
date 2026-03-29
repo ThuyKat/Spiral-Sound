@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../../context/authContext';
+import styles from '../banner.module.css';
 export default function Navigation({ isOpen }) {
   const { isLoggedin, logout } = useContext(AuthContext);
 
@@ -18,7 +19,7 @@ export default function Navigation({ isOpen }) {
   }
   return (
     <nav
-      className={`header-menu ${isOpen ? 'open' : ''}`}
+      className={`${styles['header-menu']} ${isOpen ? styles.open : ''}`}
       aria-label="Main menu"
     >
       {isLoggedin ? (

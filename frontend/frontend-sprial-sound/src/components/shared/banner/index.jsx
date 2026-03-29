@@ -2,6 +2,7 @@ import Navigation from './navigation';
 import image from '../../../assets/menu.svg';
 import { useState } from 'react';
 import CartIcon from './cartIcon';
+import styles from './banner.module.css';
 
 export default function Banner() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,11 +11,11 @@ export default function Banner() {
     setIsOpen(!isOpen);
   }
   return (
-    <div className="top-banner" id="top-banner">
-      <p id="greeting" className="top-banner-greeting"></p>
+    <div className={styles['top-banner']} id="top-banner">
+      <p id="greeting" className={styles['top-banner-greeting']}></p>
       <CartIcon />
       <button
-        className="menu-toggle"
+        className={styles['menu-toggle']}
         aria-label="Toggle menu"
         onClick={handleToggle}
       >

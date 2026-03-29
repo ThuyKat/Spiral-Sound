@@ -2,6 +2,7 @@ import { useState, useRef, useContext } from 'react';
 import { AuthContext } from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import styles from './login.module.css';
 export default function Login() {
   const { login } = useContext(AuthContext);
   const ref = useRef(0);
@@ -34,14 +35,14 @@ export default function Login() {
     }
   };
   return (
-    <main className="sign-forms">
+    <main className={styles['sign-forms']}>
       <form
         className="sign-form"
         id="signin-form"
         autoComplete="off"
         action={handleSubmit}
       >
-        <div className="form-inner">
+        <div className={styles['form-inner']}>
           <h2>Welcome back!</h2>
           <label htmlFor="signin-username">Username</label>
           <input
@@ -65,12 +66,12 @@ export default function Login() {
             required
           />
 
-          <button type="submit" className="form-btn" ref={ref}>
+          <button type="submit" className={styles['form-btn']} ref={ref}>
             Log In
           </button>
           <p>
             No account?{' '}
-            <Link to="/signup" className="sign-link">
+            <Link to="/signup" className={styles['sign-link']}>
               Sign up here
             </Link>
             .

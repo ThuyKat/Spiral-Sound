@@ -1,0 +1,57 @@
+.cart-main {
+  margin: 0 auto;
+  padding: 1.5em;
+  max-width: 600px;
+}
+
+.cart-main ul {
+  list-style: none;
+  width: 100%;
+  padding: 0.5em 0;
+}
+
+.cart-main ul li {
+  margin-bottom: 0.5em;
+  padding-bottom: 0.25em;
+  border-bottom: 1px solid var(--color-accent);
+}
+
+.cart-main ul li div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cart-main ul li span {
+  font-size: 14px;
+}
+
+.cart-main ul li button {
+  background-color: transparent;
+  margin-left: auto;
+  border: 0;
+  cursor: pointer;
+}
+
+.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.main-btn {
+  padding: 0.8em 1.5em;
+  background-color: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.main-btn:hover {
+  background-color: dodgerblue;
+}
+
+.main-btn:active {
+  background-color: yellow;
+  color: black;
+}

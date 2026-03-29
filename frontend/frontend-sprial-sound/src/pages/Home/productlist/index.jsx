@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { CartContext } from '../../../context/cartContext';
 import { useContext } from 'react';
+import styles from './productlist.module.css';
 export default function ProductList() {
   const [products, setProducts] = useState([]);
   const [queryParams, setQueryParams] = useSearchParams();
@@ -41,22 +42,22 @@ export default function ProductList() {
     }
   };
   return (
-    <div className="products" id="products-container">
+    <div className={styles.products} id="products-container">
       {products.map((album) => {
         return (
-          <div className="product-card" key={album.id}>
+          <div className={styles['product-card']} key={album.id}>
             <img src={`/images/${album.image}`} alt={album.title} />
             <h2>{album.title}</h2>
             <h3>{album.artist}</h3>
             <p>${album.price}</p>
             <button
-              className="main-btn add-btn"
+              className={styles['main-btn']}
               data-id={album.id}
               onClick={handleAddToCart}
             >
               Add to Cart
             </button>
-            <p className="genre-label">{album.genre}</p>
+            <p className={styles['genre-label']}>{album.genre}</p>
           </div>
         );
       })}
