@@ -1,8 +1,8 @@
 # From Vanilla JS to React: What I Learned Migrating a Vinyl Store
 
-Spiral Sounds started as a Scrimba Express.js follow-along project — an online vinyl record store with a plain HTML/JavaScript frontend and a Node.js/Express backend. I extended it by integrating Stripe for payments, then took on a more interesting challenge: migrating the frontend from vanilla HTML/JS to React.
+I have an old project- a plain HTML/JavaScript frontend and a Node.js/Express backend. I extended it by integrating Stripe for payments, then took on a more interesting challenge: migrating the frontend from vanilla HTML/JS to React.
 
-Migrating code you already wrote and understand is one of the better ways to go deeper with React. You're not learning the syntax and the concepts at the same time — you already know what the code does, so you can focus entirely on *why* each React pattern exists. This is what that looked like.
+Migrating code you already wrote and understand is one of the better ways to go deeper with React. You're not learning the syntax and the concepts at the same time — you already know what the code does, so you can focus entirely on _why_ each React pattern exists. This is what that looked like.
 
 ---
 
@@ -53,8 +53,12 @@ The cart count was where things got more interesting.
 ```javascript
 function useCartCount() {
   const [cartCount, setCartCount] = useState(0);
-  const refresh = async () => { /* fetch /api/cart/cart-count */ };
-  useEffect(() => { refresh(); }, []);
+  const refresh = async () => {
+    /* fetch /api/cart/cart-count */
+  };
+  useEffect(() => {
+    refresh();
+  }, []);
   return [cartCount, refresh];
 }
 ```

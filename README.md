@@ -1,6 +1,6 @@
 # Spiral Sounds
 
-An online vinyl record store built with vanilla JavaScript on the frontend and Express.js on the backend, with Stripe hosted checkout for payment processing.
+An online vinyl record store built with an Express.js backend and two frontend versions: the original vanilla JavaScript implementation and a migrated React version.
 
 ---
 
@@ -8,31 +8,39 @@ An online vinyl record store built with vanilla JavaScript on the frontend and E
 
 Spiral Sounds lets users browse a catalogue of vinyl records, add them to a cart, and check out securely via Stripe. It includes user authentication, session management, and a webhook handler to fulfil orders after payment.
 
+The project has two frontend implementations — the original plain HTML/JS version and a React migration — kept together to document the progression.
+
 ---
 
 ## Project Structure
 
 ```
 spiral-sounds/
-├── controllers/          # Route handler logic
-│   ├── authController.js
-│   ├── cartController.js
-│   ├── meController.js
-│   ├── payController.js
-│   └── productsController.js
-├── db/
-│   └── db.js             # SQLite connection helper
-├── middleware/
-│   └── requireAuth.js    # Session auth guard
-├── routes/               # Express routers
-│   ├── auth.js
-│   ├── cart.js
-│   ├── me.js
-│   ├── payment.js
-│   └── products.js
-├── public/               # Static frontend files
+├── backend/
+│   ├── controllers/          # Route handler logic
+│   │   ├── authController.js
+│   │   ├── cartController.js
+│   │   ├── meController.js
+│   │   ├── payController.js
+│   │   └── productsController.js
+│   ├── db/
+│   │   └── db.js             # SQLite connection helper
+│   ├── middleware/
+│   │   └── requireAuth.js    # Session auth guard
+│   ├── routes/               # Express routers
+│   │   ├── auth.js
+│   │   ├── cart.js
+│   │   ├── me.js
+│   │   ├── payment.js
+│   │   └── products.js
+│   ├── static/
+│   │   └── images/           # Served as /images
+│   ├── server.js
+│   ├── package.json
+│   └── .env                  # Not committed — see Environment Variables
+│
+├── frontend/                 # Original vanilla JS frontend
 │   ├── css/
-│   ├── images/
 │   ├── js/
 │   │   ├── authUI.js
 │   │   ├── cart.js
@@ -49,14 +57,41 @@ spiral-sounds/
 │   ├── login.html
 │   ├── signup.html
 │   └── success.html
-├── server.js
-├── package.json
-└── .env                  # Not committed — see Environment Variables
+│
+└── frontend/frontend-react/  # Migrated React frontend
+    ├── public/
+    ├── src/
+    │   ├── components/
+    │   │   ├── Layout.jsx
+    │   │   └── shared/
+    │   │       ├── banner/
+    │   │       │   ├── cartIcon/
+    │   │       │   └── navigation/
+    │   │       ├── footer/
+    │   │       └── header/
+    │   ├── context/
+    │   │   ├── authContext.jsx
+    │   │   └── cartContext.jsx
+    │   ├── hooks/
+    │   │   ├── useAuth.js
+    │   │   └── useCartCount.js
+    │   ├── pages/
+    │   │   ├── Cart/
+    │   │   ├── Home/
+    │   │   │   ├── genre/
+    │   │   │   └── productlist/
+    │   │   ├── Login/
+    │   │   ├── PageNotFound/
+    │   │   └── Signup/
+    │   ├── App.jsx
+    │   └── main.jsx
+    ├── vite.config.js
+    └── package.json
 ```
 
 ---
 
-## Frontend
+## Frontend — Original (Vanilla JS)
 
 Built with plain HTML, CSS, and vanilla JavaScript (ES modules). No frameworks.
 
@@ -64,6 +99,42 @@ Built with plain HTML, CSS, and vanilla JavaScript (ES modules). No frameworks.
 - `cart.html` — cart page with checkout button
 - `login.html` / `signup.html` — authentication forms
 - `success.html` — shown after successful Stripe payment
+
+State lived in the DOM. Navigation caused full page reloads. Shared UI (banner, header, footer) was duplicated across every HTML file.
+
+---
+
+## Frontend — React Migration
+
+Built with **React 19**, **React Router v7**, and **Vite**. CSS Modules used for component-level styles.
+
+### Routing
+
+React Router replaces file-based navigation. A `Layout` component wraps all routes via `<Outlet />`, keeping the banner, header, and footer mounted across navigation.
+
+```
+Layout
+├── Banner
+├── Header
+├── <Outlet />   ← current page renders here
+└── Footer
+```
+
+### State management
+
+| Concern | Solution |
+|---|---|
+| Auth state (current user, login, logout) | `AuthContext` + `useAuth` hook |
+| Cart count (shared between banner and product list) | `CartContext` + `useCartCount` hook |
+| Mobile menu toggle | Local state lifted to `Banner`, passed to `Navigation` as prop |
+
+`useAuth` manages session state — calls `/api/auth/me` on mount to restore the session from the cookie. `AuthContext` owns the `login()` and `logout()` actions and updates state directly via `setUser`.
+
+`useCartCount` runs inside `CartContextProvider` as a single instance. Both `CartIcon` and `ProductList` consume from the same context, so calling `refresh()` in one component updates the count for both.
+
+### Vite dev proxy
+
+The Vite dev server proxies `/api` and `/images` to `http://localhost:8000`, so the backend runs separately and no CORS configuration is needed during development.
 
 ---
 
@@ -119,6 +190,12 @@ See [STRIPE.md](STRIPE.md) for the full step-by-step integration guide.
 
 ---
 
+## React Migration Write-up
+
+See [ARTICLE.md](ARTICLE.md) for a detailed write-up on what changed and why — covering routing, shared UI, the custom hook trap, Context, and the auth pattern.
+
+---
+
 ## Environment Variables
 
 | Variable | Description |
@@ -133,9 +210,26 @@ Never commit `.env` to version control.
 
 ## Running Locally
 
+**Backend**
+
 ```bash
+cd backend
 npm install
 npm start
 ```
 
 Server runs at `http://localhost:8000`.
+
+**React frontend**
+
+```bash
+cd frontend/frontend-react
+npm install
+npm run dev
+```
+
+Vite dev server runs at `http://localhost:5173` and proxies API calls to the backend.
+
+**Vanilla JS frontend**
+
+Open `frontend/index.html` directly in a browser, or serve it statically from the backend.
