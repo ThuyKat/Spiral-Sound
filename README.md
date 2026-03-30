@@ -233,3 +233,19 @@ Vite dev server runs at `http://localhost:5173` and proxies API calls to the bac
 **Vanilla JS frontend**
 
 Open `frontend/index.html` directly in a browser, or serve it statically from the backend.
+
+---
+
+## Testing the App
+
+A test account is pre-seeded in the database:
+
+| Field | Value |
+|---|---|
+| Username | `test` |
+| Password | `test` |
+
+1. Start the backend and either frontend
+2. Go to `/login` and sign in with the credentials above
+3. Browse the catalogue and add items to your cart
+4. To test Stripe checkout, use card number `4242 4242 4242 4242` with any future expiry and any CVC
