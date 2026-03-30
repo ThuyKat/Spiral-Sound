@@ -1,11 +1,13 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { CartContext } from '../../context/cartContext';
 import styles from './cart.module.css';
 export default function Cart() {
-  const ref = useRef(0);
+  const ref = useRef(null);
   const [isUnauthorized, setIsUnauthorized] = useState(false);
   const [message, setMessage] = useState('');
   const [cartItems, setCartItems] = useState([]);
+  const { refresh } = useContext(CartContext);
   useEffect(() => {
     async function fetchCartItems() {
       const res = await fetch('/api/cart/', { credentials: 'include' });
@@ -26,25 +28,25 @@ export default function Cart() {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  function handleRemoveItem(itemId) {
-    async function removeItem(itemId) {
-      try {
-        const res = await fetch(`/api/cart/${itemId}`, {
-          method: 'DELETE',
-          credentials: 'include',
-        });
+  async function handleRemoveItem(itemId) {
+    try {
+      const res = await fetch(`/api/cart/${itemId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
 
-        if (res.status === 204) {
-          const updatedItems = cartItems.filter((item) => item.id !== itemId);
-          setCartItems(updatedItems);
-        } else {
-          console.error('Error removing item:', await res.text());
-        }
-      } catch (err) {
-        console.error('Error removing item:', err);
+      if (res.status === 204) {
+        const updatedItems = cartItems.filter(
+          (item) => item.cartItemId !== itemId
+        );
+        setCartItems(updatedItems);
+        refresh();
+      } else {
+        console.error('Error removing item:', await res.text());
       }
+    } catch (err) {
+      console.error('Error removing item:', err);
     }
-    removeItem(itemId);
   }
   async function handleCheckout() {
     ref.current.disabled = true;
@@ -97,7 +99,7 @@ export default function Cart() {
           );
         })}
       </ul>
-      <p id="cart-total">Total: {cartTotal}</p>
+      <p id="cart-total">Total: ${cartTotal.toFixed(2)}</p>
       {isUnauthorized && (
         <p>
           Please <Link to="/login">log in</Link>.
@@ -109,7 +111,7 @@ export default function Cart() {
         id="checkout-btn"
         ref={ref}
         onClick={handleCheckout}
-        disabled={cartTotal < 0 ? true : false}
+        disabled={cartItems.length === 0}
       >
         Checkout
       </button>
