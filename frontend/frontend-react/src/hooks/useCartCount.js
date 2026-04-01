@@ -8,6 +8,7 @@ export default function useCartCount(initialValue = 0) {
     setCartCount(data.totalItems ?? 0);
   };
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refresh();
   }, []);
 
