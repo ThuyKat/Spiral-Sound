@@ -28,7 +28,7 @@ export default function Login() {
       } else {
         setError('Login failed. Please try again.');
       }
-    } catch (err) {
+    } catch {
       setError('Unable to connect. Please try again.');
     } finally {
       ref.current.disabled = false;

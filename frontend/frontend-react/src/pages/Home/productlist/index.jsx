@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import styles from './productlist.module.css';
 export default function ProductList() {
   const [products, setProducts] = useState([]);
-  const [queryParams, setQueryParams] = useSearchParams();
+  const [queryParams] = useSearchParams();
   const { refresh } = useContext(CartContext);
   const navigate = useNavigate();
   useEffect(() => {
