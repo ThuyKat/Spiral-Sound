@@ -4,13 +4,15 @@ import { Outlet } from 'react-router-dom';
 import Banner from './shared/banner';
 import AuthContextProvider from '../context/authContext';
 import CartContextProvider from '../context/cartContext';
+import Tour from './Tour';
 export default function Layout() {
   return (
     <AuthContextProvider>
       <CartContextProvider>
+        <Tour />
         <Banner />
         <Header />
-        <main>
+        <main className="product-list">
           <Outlet />
         </main>
         <Footer />

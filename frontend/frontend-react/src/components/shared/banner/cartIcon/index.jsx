@@ -9,7 +9,7 @@ export default function CartIcon() {
   const { isLoggedin } = useContext(AuthContext);
   if (!isLoggedin) return null;
   return (
-    <Link to="/cart" className={styles['cart-banner-link']}>
+    <Link to="/cart" className={styles['cart-banner-link']} id="cart-icon">
       <img src={cartImage} alt="cart" />
       {cartCount}
     </Link>

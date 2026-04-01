@@ -45,19 +45,21 @@ export default function ProductList() {
     <div className={styles.products} id="products-container">
       {products.map((album) => {
         return (
-          <div className={styles['product-card']} key={album.id}>
-            <img src={`/images/${album.image}`} alt={album.title} />
-            <h2>{album.title}</h2>
-            <h3>{album.artist}</h3>
-            <p>${album.price}</p>
-            <button
-              className={styles['main-btn']}
-              data-id={album.id}
-              onClick={handleAddToCart}
-            >
-              Add to Cart
-            </button>
-            <p className={styles['genre-label']}>{album.genre}</p>
+          <div className="product-list">
+            <div className={styles['product-card']} key={album.id}>
+              <img src={`/images/${album.image}`} alt={album.title} />
+              <h2>{album.title}</h2>
+              <h3>{album.artist}</h3>
+              <p>${album.price}</p>
+              <button
+                className={styles['main-btn']}
+                data-id={album.id}
+                onClick={handleAddToCart}
+              >
+                Add to Cart
+              </button>
+              <p className={styles['genre-label']}>{album.genre}</p>
+            </div>
           </div>
         );
       })}
