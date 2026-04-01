@@ -2,21 +2,23 @@ import Header from './shared/header';
 import Footer from './shared/footer';
 import { Outlet } from 'react-router-dom';
 import Banner from './shared/banner';
-import AuthContextProvider from '../context/authContext';
-import CartContextProvider from '../context/cartContext';
+// import AuthContextProvider from '../context/authContext';
+// import CartContextProvider from '../context/cartContext';
 import Tour from './Tour';
 export default function Layout() {
   return (
-    <AuthContextProvider>
-      <CartContextProvider>
-        <Tour />
-        <Banner />
-        <Header />
-        <main className="product-list">
-          <Outlet />
-        </main>
-        <Footer />
-      </CartContextProvider>
-    </AuthContextProvider>
+    // <AuthContextProvider>
+    //   <CartContextProvider>
+    <>
+      <Tour />
+      <Banner />
+      <Header />
+      <main>
+        <Outlet />
+      </main>
+      <Footer />
+    </>
+    //   </CartContextProvider>
+    // </AuthContextProvider>
   );
 }

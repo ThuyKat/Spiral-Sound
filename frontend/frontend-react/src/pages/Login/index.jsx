@@ -1,10 +1,11 @@
-import { useState, useRef, useContext } from 'react';
-import { AuthContext } from '../../context/authContext';
+import { useState, useRef } from 'react';
+// import { AuthContext } from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import styles from './login.module.css';
+import { useLoginMutation } from '../../domain/mutations/useLoginMutation';
 export default function Login() {
-  const { login } = useContext(AuthContext);
+  // const { login } = useContext(AuthContext);
   const ref = useRef(0);
   const navigate = useNavigate();
   //   const [formData, setFormData] = useState({
@@ -16,23 +17,42 @@ export default function Login() {
   //     const { name, value } = e.target;
   //     setFormData({ ...formData, [name]: value });
   //   };
+  const { mutate: login } = useLoginMutation({
+    onSuccess: () => {
+      navigate('/');
+      ref.current.disabled = false;
+    },
+    onError: (error) => {
+      if (error.message.startsWith('401')) {
+        setError('Wrong username or password.');
+      } else {
+        setError('Unable to connect. Please try again.');
+      }
+      ref.current.disabled = true;
+    },
+  });
   const handleSubmit = async (formData) => {
     ref.current.disabled = true;
-    try {
-      const res = await login(
-        formData.get('username'),
-        formData.get('password')
-      );
-      if (res.ok) {
-        navigate('/');
-      } else {
-        setError('Login failed. Please try again.');
-      }
-    } catch {
-      setError('Unable to connect. Please try again.');
-    } finally {
-      ref.current.disabled = false;
-    }
+    setError('');
+    login({
+      username: formData.get('username'),
+      password: formData.get('password'),
+    });
+    // try {
+    //   const res = await login(
+    //     formData.get('username'),
+    //     formData.get('password')
+    //   );
+    //   if (res.ok) {
+    //     navigate('/');
+    //   } else {
+    //     setError('Login failed. Please try again.');
+    //   }
+    // } catch {
+    //   setError('Unable to connect. Please try again.');
+    // } finally {
+    //   ref.current.disabled = false;
+    // }
   };
   return (
     <main className={styles['sign-forms']}>

@@ -1,78 +1,94 @@
-import { useRef, useState, useEffect, useContext } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CartContext } from '../../context/cartContext';
+import { useCart } from '../../domain/queries/useCart';
+import { useMe } from '../../domain/queries/useMe';
+import { useRemoveFromCartMutation } from '../../domain/mutations/useRemoveFromCartMutation';
+import { useCheckoutMutation } from '../../domain/mutations/useCheckoutMutation';
 import styles from './cart.module.css';
 export default function Cart() {
   const ref = useRef(null);
-  const [isUnauthorized, setIsUnauthorized] = useState(false);
+  // const [isUnauthorized, setIsUnauthorized] = useState(false);
   const [message, setMessage] = useState('');
-  const [cartItems, setCartItems] = useState([]);
-  const { refresh } = useContext(CartContext);
-  useEffect(() => {
-    async function fetchCartItems() {
-      const res = await fetch('/api/cart/', { credentials: 'include' });
+  // const [cartItems, setCartItems] = useState([]);
+  const { data: user } = useMe();
+  const { data: cartItems = [], isError, error } = useCart();
+  const isUnauthorized = !user?.isLoggedIn || (isError && error?.message?.startsWith('401'));
+  const { mutate: removeItem } = useRemoveFromCartMutation({
+    onError: (error) => console.error('Error removing item:', error.message),
+  });
+  const { mutate: checkout } = useCheckoutMutation({
+    onError: (error) => {
+      setMessage(error.message || 'Something went wrong.');
+      ref.current.disabled = false;
+    },
+  });
+  // const { refresh } = useContext(CartContext);
+  // useEffect(() => {
+  //   async function fetchCartItems() {
+  //     const res = await fetch('/api/cart/', { credentials: 'include' });
 
-      if (!res.ok) {
-        ref.current.disabled = true;
-        ref.current.classList.add(styles.disabled);
-        setIsUnauthorized(true);
-        return;
-      }
+  //     if (!res.ok) {
+  //       // ref.current.disabled = true;
+  //       // ref.current.classList.add(styles.disabled);
+  //       setIsUnauthorized(true);
+  //       return;
+  //     }
 
-      const { items } = await res.json();
-      setCartItems(items);
-    }
-    fetchCartItems();
-  }, []);
+  //     const { items } = await res.json();
+  //     setCartItems(items);
+  //   }
+  //   fetchCartItems();
+  // }, []);
   const cartTotal = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
   async function handleRemoveItem(itemId) {
-    try {
-      const res = await fetch(`/api/cart/${itemId}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
+    removeItem(itemId);
+    // try {
+    //   const res = await fetch(`/api/cart/${itemId}`, {
+    //     method: 'DELETE',
+    //     credentials: 'include',
+    //   });
 
-      if (res.status === 204) {
-        const updatedItems = cartItems.filter(
-          (item) => item.cartItemId !== itemId
-        );
-        setCartItems(updatedItems);
-        refresh();
-      } else {
-        console.error('Error removing item:', await res.text());
-      }
-    } catch (err) {
-      console.error('Error removing item:', err);
-    }
+    //   if (res.status === 204) {
+    //     const updatedItems = cartItems.filter(
+    //       (item) => item.cartItemId !== itemId
+    //     );
+    //     setCartItems(updatedItems);
+    //     refresh();
+    //   } else {
+    //     console.error('Error removing item:', await res.text());
+    //   }
+    // } catch (err) {
+    //   console.error('Error removing item:', err);
+    // }
   }
   async function handleCheckout() {
     ref.current.disabled = true;
     setMessage('Redirecting to payment...');
+    checkout();
+    // try {
+    //   const res = await fetch('/api/checkout/create-checkout-session', {
+    //     method: 'POST',
+    //     credentials: 'include',
+    //   });
 
-    try {
-      const res = await fetch('/api/checkout/create-checkout-session', {
-        method: 'POST',
-        credentials: 'include',
-      });
+    //   const data = await res.json();
 
-      const data = await res.json();
+    //   if (!res.ok) {
+    //     setMessage(data.error || 'Something went wrong.');
+    //     ref.current.disabled = false;
+    //     return;
+    //   }
 
-      if (!res.ok) {
-        setMessage(data.error || 'Something went wrong.');
-        ref.current.disabled = false;
-        return;
-      }
-
-      // Redirect to Stripe's hosted checkout page
-      window.location.href = data.url;
-    } catch (err) {
-      console.error('Checkout error:', err);
-      setMessage('Could not connect to payment service.');
-      ref.current.disabled = false;
-    }
+    //   // Redirect to Stripe's hosted checkout page
+    //   window.location.href = data.url;
+    // } catch (err) {
+    //   console.error('Checkout error:', err);
+    //   setMessage('Could not connect to payment service.');
+    //   ref.current.disabled = false;
+    // }
   }
   return (
     <main className={styles['cart-main']}>
@@ -111,7 +127,7 @@ export default function Cart() {
         id="checkout-btn"
         ref={ref}
         onClick={handleCheckout}
-        disabled={cartItems.length === 0}
+        disabled={cartItems.length === 0 || isUnauthorized}
       >
         Checkout
       </button>
